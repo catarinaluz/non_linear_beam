@@ -148,9 +148,7 @@ def get_parameters(time_array, time_response):
 
     w0 = np.sqrt(wd**2 + (gamma / 2)**2)
 
-    plt.plot(peaks_array)
-
-    return gamma, w0
+    return gamma, w0, peaks_array, peaks_time_array
 
 def lowpass_filter(t, signal_data, cutoff_freq, order=5):
     """
