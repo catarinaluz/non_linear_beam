@@ -143,12 +143,12 @@ def get_parameters(time_array, time_response):
     wd = 2 * np.pi / T_d
 
     amplitude_ratios = np.array(peaks_array[:-1]) / np.array(peaks_array[1:])
-    log_decrements = np.log(amplitude_ratios)
+    log_decrements = np.log(abs(amplitude_ratios))
     gamma = 2 * np.mean(log_decrements) / T_d
 
     w0 = np.sqrt(wd**2 + (gamma / 2)**2)
 
-    return gamma, w0, peaks_array, peaks_time_array
+    return gamma, w0
 
 def lowpass_filter(t, signal_data, cutoff_freq, order=5):
     """
