@@ -143,10 +143,12 @@ def get_parameters(time_array, time_response):
     wd = 2 * np.pi / T_d
 
     amplitude_ratios = np.array(peaks_array[:-1]) / np.array(peaks_array[1:])
-    log_decrements = np.log(amplitude_ratios**2)
+    log_decrements = np.log(amplitude_ratios)
     gamma = 2 * np.mean(log_decrements) / T_d
 
     w0 = np.sqrt(wd**2 + (gamma / 2)**2)
+
+    plt.plot(peaks_array)
 
     return gamma, w0
 
