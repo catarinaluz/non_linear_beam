@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 
 import scipy.signal as signal
 
-## adicionar comentario aaaaaaaa
 
 def get_frequency_data(dir, sweep_up = True):
     """
@@ -33,6 +32,7 @@ def get_frequency_data(dir, sweep_up = True):
     4. Read the new file and extract the specified columns (frequency and velocity amplitude).
     5. Convert the velocity amplitude to displacement amplitude.
     6. Return the frequency and displacement amplitude arrays.
+
     """
 
     if sweep_up:
@@ -66,9 +66,11 @@ def get_time_data(dir):
     Reads time data from a text file.
 
     Parameters:
+    -----------
     - dir: Path to the text file containing time data.
 
     Returns:
+    -----------
     - time_array: Array of time values.
     - vel_array: Array of velocity values corresponding to the time values.
     """
@@ -125,6 +127,8 @@ def get_parameters(time_array, time_response):
     in the time response are identified and used to calculate the average damped period and the logarithmic
     decrement, which are then used to determine the damping coefficient and the undamped natural frequency.
     
+    gamma = c/m
+
     """
 
     peaks_array = []
@@ -216,4 +220,5 @@ def set_folder_name(main_dir, acc=0, time=True, mec=True):
         name = name + str(acc) + "g/" + str(acc) + "g.txt"
 
     return name
+
 
