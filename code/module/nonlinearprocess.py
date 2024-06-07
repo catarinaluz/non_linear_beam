@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 import scipy.signal as signal
 
-
+## adicionar comentario
 
 def get_frequency_data(dir, sweep_up = True):
     """
