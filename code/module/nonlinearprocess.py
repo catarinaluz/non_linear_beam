@@ -142,7 +142,7 @@ def get_parameters(time_array, time_response):
 
     # Calculate the logarithmic decrement
     amplitude_ratios = np.array(peaks_array[:-1]) / np.array(peaks_array[1:])
-    log_decrements = np.log(np.abs(amplitude_ratios))
+    log_decrements = np.log(amplitude_ratios)
     gamma = 2 * np.mean(log_decrements) / T_d
 
     # Calculate the undamped natural frequency (w0)
