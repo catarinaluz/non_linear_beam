@@ -62,23 +62,39 @@ def get_frequency_data(dir, sweep_up = True):
     return frequency_array_hz, amplitude_disp
 
 def get_time_data(dir):
-    cols = (0,1)
+    """
+    Reads time data from a text file.
 
+    Parameters:
+    - dir: Path to the text file containing time data.
+
+    Returns:
+    - time_array: Array of time values.
+    - vel_array: Array of velocity values corresponding to the time values.
+    """
+    # Define the columns to extract from the text file
+    cols = (0, 1)
+
+    # Open and read the contents of the text file
     with open(dir, 'r') as file:
-      filedata = file.read()
+        filedata = file.read()
 
+    # Replace commas with dots and tabs with commas for proper formatting
     filedata = filedata.replace(',', '.').replace('\t', ',')
 
+    # Write the modified data to a new file ('modified_data.txt')
     with open('modified_data.txt', 'w') as file:
-      file.write(filedata)
+        file.write(filedata)
 
+    # Load the modified data from the new file into a NumPy array
     data = np.genfromtxt('modified_data.txt', delimiter=',', skip_header=6, usecols=cols)
 
-    time_array = data[:,0]
-
-    vel_array = data[:,1]
+    # Extract time and velocity arrays from the data
+    time_array = data[:, 0]
+    vel_array = data[:, 1]
 
     return time_array, vel_array
+
 
 def get_parameters(time_array, time_response):
     """
@@ -191,10 +207,10 @@ def set_folder_name(main_dir, acc=0, time=True, mec=True):
         name = main_dir + "Frequency response/"
         if mec:
             # If it's a mechanical response
-            name = name + "mec-frf"
+            name = name + "mec-frf/"
         else: 
             # If it's a magnetic response
-            name = name + "mag-frf"
+            name = name + "mag-frf/"
 
         # Add the acceleration value to the directory name
         name = name + str(acc) + "g/" + str(acc) + "g.txt"
