@@ -89,7 +89,7 @@ def get_time_data(dir):
         file.write(filedata)
 
     # Load the modified data from the new file into a NumPy array
-    data = np.genfromtxt('modified_data.txt', delimiter=',', skip_header=6, usecols=cols)
+    data = np.genfromtxt('modified_data.txt', delimiter=',', skip_header=7, usecols=cols)
 
     # Extract time and velocity arrays from the data
     time_array = data[:, 0]
