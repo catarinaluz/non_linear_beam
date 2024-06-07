@@ -1,3 +1,12 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import zipfile
+import sympy
+
+import scipy.signal as signal
+
+
+
 def get_frequency_data(dir, sweep_up = True):
     """
     Reads data from a .txt file and returns the frequency and displacement amplitude.
