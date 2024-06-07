@@ -1,7 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import zipfile
-import sympy
 
 import scipy.signal as signal
 
