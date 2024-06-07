@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import scipy.signal as signal
+from scipy.signal import find_peaks
 
 
 def get_frequency_data(dir, sweep_up = True):
@@ -130,57 +131,24 @@ def get_parameters(time_array, time_response):
     gamma = c/m
 
     """
+    # Use find_peaks to identify the local maxima in the time response
+    peaks_indices, _ = find_peaks(time_response)
+    peaks_array = time_response[peaks_indices]
+    peaks_time_array = time_array[peaks_indices]
 
-    peaks_array = []
-    peaks_time_array = []
-
-    for i in range(1, len(time_response) - 1):
-        if time_response[i] > time_response[i - 1] and time_response[i] > time_response[i + 1]:
-            peaks_array.append(time_response[i])
-            peaks_time_array.append(time_array[i])
-
+    # Calculate the average damped period (T_d) from the time differences between consecutive peaks
     T_d = np.mean(np.diff(peaks_time_array))
     wd = 2 * np.pi / T_d
 
+    # Calculate the logarithmic decrement
     amplitude_ratios = np.array(peaks_array[:-1]) / np.array(peaks_array[1:])
-    log_decrements = np.log(abs(amplitude_ratios))
+    log_decrements = np.log(amplitude_ratios)
     gamma = 2 * np.mean(log_decrements) / T_d
 
+    # Calculate the undamped natural frequency (w0)
     w0 = np.sqrt(wd**2 + (gamma / 2)**2)
 
     return gamma, w0
-
-def lowpass_filter(t, signal_data, cutoff_freq, order=5):
-    """
-    Applies a Butterworth low-pass filter to the signal data.
-
-    Parameters:
-    -----------
-    - t: array of time
-    - signal_data: array of signal data
-    - cutoff_freq: cut-off frequency of the low-pass filter (Hz)
-    - order: order of the Butterworth filter (default is 5)
-
-    Returns:
-    -----------
-    - signal_filtered: array of filtered signal data
-    """
-    # Calcular a taxa de amostragem a partir do vetor de tempo
-    sample_rate = 1 / (t[1] - t[0])
-
-    # Calcular a frequência de Nyquist
-    nyquist_freq = 0.5 * sample_rate
-
-    # Normalizar a frequência de corte em relação à frequência de Nyquist
-    normalized_cutoff = cutoff_freq / nyquist_freq
-
-    # Criar o filtro Butterworth
-    b, a = signal.butter(order, normalized_cutoff, btype='low', analog=False)
-
-    # Aplicar o filtro ao sinal usando filtfilt para evitar defasagem
-    signal_filtered = signal.filtfilt(b, a, signal_data)
-
-    return signal_filtered
 
 def set_folder_name(main_dir, acc=0, time=True, mec=True):
     """
