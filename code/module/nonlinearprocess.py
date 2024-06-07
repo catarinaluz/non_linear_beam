@@ -132,16 +132,18 @@ def get_parameters(time_array, time_response):
 
 def lowpass_filter(t, signal_data, cutoff_freq, order=5):
     """
-    Aplica um filtro passa-baixa Butterworth aos dados do sinal.
+    Applies a Butterworth low-pass filter to the signal data.
 
-    Parâmetros:
-    - t: array de tempo
-    - signal_data: array de dados do sinal
-    - cutoff_freq: frequência de corte do filtro passa-baixa (Hz)
-    - order: ordem do filtro Butterworth (default é 5)
+    Parameters:
+    -----------
+    - t: array of time
+    - signal_data: array of signal data
+    - cutoff_freq: cut-off frequency of the low-pass filter (Hz)
+    - order: order of the Butterworth filter (default is 5)
 
-    Retorna:
-    - signal_filtered: array de dados do sinal filtrado
+    Returns:
+    -----------
+    - signal_filtered: array of filtered signal data
     """
     # Calcular a taxa de amostragem a partir do vetor de tempo
     sample_rate = 1 / (t[1] - t[0])
@@ -159,4 +161,43 @@ def lowpass_filter(t, signal_data, cutoff_freq, order=5):
     signal_filtered = signal.filtfilt(b, a, signal_data)
 
     return signal_filtered
+
+def set_folder_name(main_dir, acc=0, time=True, mec=True):
+    """
+    Constructs the directory name based on the provided parameters.
+
+    Parameters:
+    -----------
+    - main_dir: main directory where the directory will be created
+    - acc: acceleration value (default is 0)
+    - time: indicates if it's a time domain response (default is True)
+    - mec: indicates if it's a mechanical response (default is True)
+
+    Returns:
+    -----------
+    - name: constructed directory name based on the parameters
+    """
+    if time:
+        # If it's a time domain response
+        name = main_dir + "Time response/"
+        if mec:
+            # If it's a mechanical response
+            name = name + "mec-time/time x velocity.txt"
+        else:
+            # If it's a magnetic response
+            name = name + "mag-time/time x velocity.txt"
+    else:
+        # If it's a frequency domain response
+        name = main_dir + "Frequency response/"
+        if mec:
+            # If it's a mechanical response
+            name = name + "mec-frf"
+        else: 
+            # If it's a magnetic response
+            name = name + "mag-frf"
+
+        # Add the acceleration value to the directory name
+        name = name + str(acc) + "g/" + str(acc) + "g.txt"
+
+    return name
 
