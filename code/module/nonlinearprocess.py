@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import scipy.signal as signal
-from scipy.signal import find_peaks
+
 
 
 def get_frequency_data(dir, sweep_up = True):
@@ -131,24 +131,26 @@ def get_parameters(time_array, time_response):
     gamma = c/m
 
     """
-    # Use find_peaks to identify the local maxima in the time response
-    peaks_indices, _ = find_peaks(time_response)
-    peaks_array = time_response[peaks_indices]
-    peaks_time_array = time_array[peaks_indices]
 
-    # Calculate the average damped period (T_d) from the time differences between consecutive peaks
+    peaks_array = []
+    peaks_time_array = []
+
+    for i in range(1, len(time_response) - 1):
+        if time_response[i] > time_response[i - 1] and time_response[i] > time_response[i + 1]:
+            peaks_array.append(time_response[i])
+            peaks_time_array.append(time_array[i])
+
     T_d = np.mean(np.diff(peaks_time_array))
     wd = 2 * np.pi / T_d
 
-    # Calculate the logarithmic decrement
     amplitude_ratios = np.array(peaks_array[:-1]) / np.array(peaks_array[1:])
-    log_decrements = np.log(amplitude_ratios)
+    log_decrements = np.log(abs(amplitude_ratios))
     gamma = 2 * np.mean(log_decrements) / T_d
 
-    # Calculate the undamped natural frequency (w0)
     w0 = np.sqrt(wd**2 + (gamma / 2)**2)
 
     return gamma, w0
+
 def lowpass_filter(t, signal_data, cutoff_freq, order=5):
     """
     Applies a Butterworth low-pass filter to the signal data.
