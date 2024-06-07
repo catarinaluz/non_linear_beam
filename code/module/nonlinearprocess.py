@@ -142,13 +142,44 @@ def get_parameters(time_array, time_response):
 
     # Calculate the logarithmic decrement
     amplitude_ratios = np.array(peaks_array[:-1]) / np.array(peaks_array[1:])
-    log_decrements = np.log(amplitude_ratios)
+    log_decrements = np.log(np.abs(amplitude_ratios))
     gamma = 2 * np.mean(log_decrements) / T_d
 
     # Calculate the undamped natural frequency (w0)
     w0 = np.sqrt(wd**2 + (gamma / 2)**2)
 
     return gamma, w0
+def lowpass_filter(t, signal_data, cutoff_freq, order=5):
+    """
+    Applies a Butterworth low-pass filter to the signal data.
+
+    Parameters:
+    -----------
+    - t: array of time
+    - signal_data: array of signal data
+    - cutoff_freq: cut-off frequency of the low-pass filter (Hz)
+    - order: order of the Butterworth filter (default is 5)
+
+    Returns:
+    -----------
+    - signal_filtered: array of filtered signal data
+    """
+    # Calcular a taxa de amostragem a partir do vetor de tempo
+    sample_rate = 1 / (t[1] - t[0])
+
+    # Calcular a frequência de Nyquist
+    nyquist_freq = 0.5 * sample_rate
+
+    # Normalizar a frequência de corte em relação à frequência de Nyquist
+    normalized_cutoff = cutoff_freq / nyquist_freq
+
+    # Criar o filtro Butterworth
+    b, a = signal.butter(order, normalized_cutoff, btype='low', analog=False)
+
+    # Aplicar o filtro ao sinal usando filtfilt para evitar defasagem
+    signal_filtered = signal.filtfilt(b, a, signal_data)
+
+    return signal_filtered
 
 def set_folder_name(main_dir, acc=0, time=True, mec=True):
     """
