@@ -411,5 +411,5 @@ def optimization(w, gamma, freq_array, amp_array, acc, initial_guess):
                       initial_guess, 
                       args=(freq_array, amp_array, w, gamma, acc), 
                       bounds=[(1e11, 1e12), (1e-6, 1e-5)],
-                      method = "L-BFGS-B")
+                      method = "BFGS")
     return result.x
