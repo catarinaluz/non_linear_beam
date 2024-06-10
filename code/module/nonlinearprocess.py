@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import scipy.signal as signal
+from scipy.optimize import curve_fit
+
 
 
 def get_frequency_data(dir, sweep_up = True):
@@ -305,3 +307,57 @@ def plot_fft(time, amplitude, freq_lim):
     plt.show()
     
     return limit_freqs_mec, limit_fft_mec
+
+def frequency_response_module(freq,k_linear, k_nl, amplitude, gamma, fm, acc):
+    """
+    Calculate the frequency response module.
+
+    Parameters:
+    -----------
+    - freq: array of frequencies
+    - k_linear: linear stiffness
+    - k_nl: nonlinear stiffness
+    - amplitude: array of amplitudes
+    - gamma: damping coefficient
+    - fm: modal force
+    - acc: acceleration
+
+    Returns:
+    -----------
+    - func: array of frequency response values
+    """
+    #TODO: verificar se é realmente gamma
+    A = ( freq**2 - k_linear - 3/4 *k_nl*amplitude**2 )**2 + (2*gamma*np.sqrt(k_linear)*freq)**2
+
+    A = A*amplitude**2
+
+    #TODO: verificar a questão da força modal
+    B = (fm * acc)**2
+
+    func = np.abs(A-B)
+
+    return func
+
+def optimization(k_linear, gamma, freq_array, amp_array, acc, initial_guess):
+    """
+    Optimize to identify knl and fm.
+
+    Parameters:
+    -----------
+    - k_linear: linear stiffness
+    - gamma: damping coefficient
+    - freq_array: array of frequencies
+    - amp_array: array of amplitudes
+    - acc: acceleration
+    - initial_guess: initial guess for k_nl and fm
+
+    Returns:
+    -----------
+    - popt: optimized parameters (k_nl and fm)
+    """
+    def model_func(freq, k_nl, fm):
+        return frequency_response_module(freq, k_linear, k_nl, amp_array, gamma, fm, acc)
+
+    #TODO: verificar função curve_fit
+    popt, pcov = curve_fit(model_func, freq_array, np.zeros_like(freq_array), p0=initial_guess)
+    return popt
