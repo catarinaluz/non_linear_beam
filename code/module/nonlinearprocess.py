@@ -308,6 +308,32 @@ def plot_fft(time, amplitude, freq_lim):
     
     return limit_freqs_mec, limit_fft_mec
 
+def coef_eq(freq,beta,w,A,gamma):
+    c_6 = (3*beta/(8*w))**2
+    c_5 = 0
+    c_4 = (3 / 4) * beta * (1 - freq / w)
+    c_3 = 0
+    c_2 = (freq-w)**2 +(gamma/2)**2
+    c_1 = 0
+    c_0 = -(freq**2*A/(2*w))**2
+
+    return [c_6,c_5,c_4,c_3,c_2,c_1,c_0]
+
+def get_frf(frequency_array, beta,w,A,gamma):
+    a_ = []
+    frequencias = []
+
+    for i,f in enumerate(frequency_array):
+        rad = 2*np.pi*f
+        c = coef_eq(rad,beta,w,A,gamma)
+        roots = np.roots(c)
+        for raiz in roots:
+            if raiz.imag == 0 and raiz.real > 0:
+                a_.append(raiz.real)
+                frequencias.append(f)
+
+    return np.array(frequencias), np.array(a_)
+
 def frequency_response_module(freq,w, k_nl, amplitude, gamma, fm, acc):
     """
     Calculate the frequency response module.
@@ -337,31 +363,6 @@ def frequency_response_module(freq,w, k_nl, amplitude, gamma, fm, acc):
 
     return func
 
-def coef_eq(freq,beta,w,A,gamma):
-    c_6 = (3*beta/(8*w))**2
-    c_5 = 0
-    c_4 = (3 / 4) * beta * (1 - freq / w)
-    c_3 = 0
-    c_2 = (freq-w)**2 +(gamma/2)**2
-    c_1 = 0
-    c_0 = -(freq**2*A/(2*w))**2
-
-    return [c_6,c_5,c_4,c_3,c_2,c_1,c_0]
-
-def get_frf(frequency_array, beta,w,A,gamma):
-    a_ = []
-    frequencias = []
-
-    for i,f in enumerate(frequency_array):
-        rad = 2*np.pi*f
-        c = coef_eq(rad,beta,w,A,gamma)
-        roots = np.roots(c)
-        for raiz in roots:
-            if raiz.imag == 0 and raiz.real > 0:
-                a_.append(raiz.real)
-                frequencias.append(f)
-
-    return np.array(frequencias), np.array(a_)
 
 def objective(params, freq_array, amp_array, w, gamma, acc):
     """
@@ -405,10 +406,10 @@ def optimization(w, gamma, freq_array, amp_array, acc, initial_guess):
     -----------
     - result.x: optimized parameters (k_nl and fm)
     """
-    # TODO: definir os bounds
+    # TODO: colocar bounds como parte da função
     result = minimize(objective, 
                       initial_guess, 
                       args=(freq_array, amp_array, w, gamma, acc), 
-                      bounds=[(1e11, 1e12), (1e-5, 1e-4)],
-                      method = None)
+                      bounds=[(1e11, 1e12), (1e-6, 1e-5)],
+                      method = "L-BFGS-B")
     return result.x
