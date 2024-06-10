@@ -381,5 +381,10 @@ def optimization(w, gamma, freq_array, amp_array, acc, initial_guess):
     -----------
     - result.x: optimized parameters (k_nl and fm)
     """
-    result = minimize(objective, initial_guess, args=(freq_array, amp_array, w, gamma, acc), bounds=[(0, None), (0, None)])
+    # TODO: definir os bounds
+    result = minimize(objective, 
+                      initial_guess, 
+                      args=(freq_array, amp_array, w, gamma, acc), 
+                      bounds=[(0, None), (0, None)],
+                      method = "Nelder-Mead")
     return result.x
