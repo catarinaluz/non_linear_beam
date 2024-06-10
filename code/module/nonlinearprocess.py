@@ -339,7 +339,7 @@ def frequency_response_module(freq,w, k_nl, amplitude, gamma, fm, acc):
     return func
 
 
-def objective(params, freq_array, amp_array, k_linear, gamma, acc):
+def objective(params, freq_array, amp_array, w, gamma, acc):
     """
     Objective function to be minimized.
 
