@@ -223,4 +223,51 @@ def set_file_name(main_dir, acc=0, time=True, mec=True, test = 1):
 
     return name
 
+def plot_fft(time, amplitude, freq_lim):
+    """
+    Plots the FFT spectrum of the given signal and returns the limited frequency and amplitude arrays.
 
+    Parameters:
+    -----------
+    - time: array-like
+        Time vector.
+    - amplitude: array-like
+        Signal amplitude data.
+    - freq_lim: float
+        Frequency limit for plotting the FFT spectrum.
+
+    Returns:
+    -----------
+    - limit_freqs_mec: array-like
+        Frequencies within the specified limit.
+    - limit_fft_mec: array-like
+        FFT amplitude values corresponding to the limited frequencies.
+    """
+    
+    # Calculate the time interval
+    delta_t = time[1] - time[0]
+    
+    # Calculate the FFT of the signal
+    vel_fft_mec = np.fft.fft(amplitude)
+    
+    # Calculate the corresponding frequencies
+    freqs_mec = np.fft.fftfreq(len(amplitude), d=delta_t)
+    
+    # Filter only the positive frequencies
+    positive_freqs_mec = freqs_mec[freqs_mec >= 0]
+    positive_fft_mec = np.abs(vel_fft_mec[freqs_mec >= 0])
+    
+    # Limit frequencies to the specified frequency limit
+    limit_freqs_mec = positive_freqs_mec[positive_freqs_mec <= freq_lim]
+    limit_fft_mec = positive_fft_mec[:len(limit_freqs_mec)]
+    
+    # Plot the FFT spectrum
+    plt.figure(figsize=(10, 6))
+    plt.plot(limit_freqs_mec, limit_fft_mec)
+    plt.xlabel('Frequency (Hz)')
+    plt.ylabel('Amplitude')
+    plt.title('FFT Spectrum of the Signal')
+    plt.grid(True)
+    plt.show()
+    
+    return limit_freqs_mec, limit_fft_mec
