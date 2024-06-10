@@ -182,6 +182,40 @@ def lowpass_filter(t, signal_data, cutoff_freq, order=5):
     
     return signal_filtered
 
+def bandpass_filter(t, signal_data, lowcut_freq, highcut_freq, order=5):
+    """
+    Applies a Butterworth band-pass filter to the signal data.
+
+    Parameters:
+    -----------
+    - t: array of time
+    - signal_data: array of signal data
+    - lowcut_freq: lower cut-off frequency of the band-pass filter (Hz)
+    - highcut_freq: upper cut-off frequency of the band-pass filter (Hz)
+    - order: order of the Butterworth filter (default is 5)
+
+    Returns:
+    -----------
+    - signal_filtered: array of filtered signal data
+    """
+    # Calculate the sampling rate from the time vector
+    sample_rate = 1 / (t[1] - t[0])
+    
+    # Calculate the Nyquist frequency
+    nyquist_freq = 0.5 * sample_rate
+    
+    # Normalize the cutoff frequencies with respect to the Nyquist frequency
+    lowcut_normalized = lowcut_freq / nyquist_freq
+    highcut_normalized = highcut_freq / nyquist_freq
+    
+    # Create the Butterworth band-pass filter
+    b, a = signal.butter(order, [lowcut_normalized, highcut_normalized], btype='band', analog=False)
+    
+    # Apply the filter to the signal using filtfilt to avoid phase shift
+    signal_filtered = signal.filtfilt(b, a, signal_data)
+    
+    return signal_filtered
+
 def set_file_name(main_dir, acc=0, time=True, mec=True, test = 1):
     """
     Constructs the directory name based on the provided parameters.
