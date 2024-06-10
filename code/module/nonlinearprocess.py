@@ -338,15 +338,15 @@ def frequency_response_module(freq,w, k_nl, amplitude, gamma, fm, acc):
     return func
 
 def coef_eq(freq,beta,w,A,gamma):
-  c_6 = (3*beta/(8*w))**2
-  c_5 = 0
-  c_4 = 3/4*beta*(1-freq/w)
-  c_3 = 0
-  c_2 = (freq-w)**2 +(gamma/2)**2
-  c_1 = 0
-  c_0 = -(freq**2*A/(2*w))**2
+    c_6 = (3*beta/(8*w))**2
+    c_5 = 0
+    c_4 = (3 / 4) * beta * (1 - freq / w)
+    c_3 = 0
+    c_2 = (freq-w)**2 +(gamma/2)**2
+    c_1 = 0
+    c_0 = -(freq**2*A/(2*w))**2
 
-  return [c_6,c_5,c_4,c_3,c_2,c_1,c_0]
+    return [c_6,c_5,c_4,c_3,c_2,c_1,c_0]
 
 def get_frf(frequency_array, beta,w,A,gamma):
     a_ = []
@@ -409,6 +409,6 @@ def optimization(w, gamma, freq_array, amp_array, acc, initial_guess):
     result = minimize(objective, 
                       initial_guess, 
                       args=(freq_array, amp_array, w, gamma, acc), 
-                      bounds=[(0, None), (0, None)],
+                      bounds=[(0, None), (1e-5, 1e-4)],
                       method = "Nelder-Mead")
     return result.x
