@@ -255,7 +255,7 @@ def set_file_name(main_dir, acc=0, time=True, mec=True, test = 1):
             name = name + "mag-frf/"
 
         # Add the acceleration value to the directory name
-        name = name + str(acc) + "g/" + str(acc) + "g.txt"
+        name = name + str(acc) + "g/" + f"{acc:.2f}" + "g.txt"
 
     return name
 
@@ -409,6 +409,6 @@ def optimization(w, gamma, freq_array, amp_array, acc, initial_guess):
     result = minimize(objective, 
                       initial_guess, 
                       args=(freq_array, amp_array, w, gamma, acc), 
-                      bounds=[(0, None), (1e-5, 1e-4)],
+                      bounds=[(1e11, 1e12), (1e-5, 1e-4)],
                       method = None)
     return result.x
