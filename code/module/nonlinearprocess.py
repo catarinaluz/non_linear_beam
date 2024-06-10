@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import scipy.signal as signal
 
 
-
 def get_frequency_data(dir, sweep_up = True):
     """
     Reads data from a .txt file and returns the frequency and displacement amplitude.
@@ -166,24 +165,24 @@ def lowpass_filter(t, signal_data, cutoff_freq, order=5):
     -----------
     - signal_filtered: array of filtered signal data
     """
-    # Calcular a taxa de amostragem a partir do vetor de tempo
+    # Calculate the sampling rate from the time vector
     sample_rate = 1 / (t[1] - t[0])
-
-    # Calcular a frequência de Nyquist
+    
+    # Calculate the Nyquist frequency
     nyquist_freq = 0.5 * sample_rate
-
-    # Normalizar a frequência de corte em relação à frequência de Nyquist
+    
+    # Normalize the cutoff frequency with respect to the Nyquist frequency
     normalized_cutoff = cutoff_freq / nyquist_freq
-
-    # Criar o filtro Butterworth
+    
+    # Create the Butterworth filter
     b, a = signal.butter(order, normalized_cutoff, btype='low', analog=False)
-
-    # Aplicar o filtro ao sinal usando filtfilt para evitar defasagem
+    
+    # Apply the filter to the signal using filtfilt to avoid phase shift
     signal_filtered = signal.filtfilt(b, a, signal_data)
-
+    
     return signal_filtered
 
-def set_folder_name(main_dir, acc=0, time=True, mec=True):
+def set_file_name(main_dir, acc=0, time=True, mec=True, test = 1):
     """
     Constructs the directory name based on the provided parameters.
 
@@ -203,7 +202,10 @@ def set_folder_name(main_dir, acc=0, time=True, mec=True):
         name = main_dir + "Time response/"
         if mec:
             # If it's a mechanical response
-            name = name + "mec-time/time x velocity.txt"
+            name = name + "mec-time/mec-t"
+            name = name + str(test)
+            name= name + "-velocity.txt"
+            
         else:
             # If it's a magnetic response
             name = name + "mag-time/time x velocity.txt"
