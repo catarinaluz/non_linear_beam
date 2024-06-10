@@ -36,17 +36,17 @@ def get_frequency_data(dir, sweep_up = True):
     """
 
     if sweep_up:
-      cols = (0,1)
+        cols = (0,1)
     else:
-      cols = (0,3)
+        cols = (0,3)
 
     with open(dir, 'r') as file:
-      filedata = file.read()
+        filedata = file.read()
 
     filedata = filedata.replace(',', '.').replace('\t', ',')
 
     with open('modified_data.txt', 'w') as file:
-      file.write(filedata)
+        file.write(filedata)
 
     data = np.genfromtxt('modified_data.txt', delimiter=',', skip_header=2, usecols=cols)
 
@@ -57,7 +57,7 @@ def get_frequency_data(dir, sweep_up = True):
     amplitude_disp = np.zeros(amplitude_vel.shape)
 
     for i, vel in enumerate(amplitude_vel):
-      amplitude_disp[i] = vel/(frequency_array_hz[i]*2*np.pi)
+        amplitude_disp[i] = vel/(frequency_array_hz[i]*2*np.pi)
 
     return frequency_array_hz, amplitude_disp
 
@@ -202,13 +202,12 @@ def set_file_name(main_dir, acc=0, time=True, mec=True, test = 1):
         name = main_dir + "Time response/"
         if mec:
             # If it's a mechanical response
-            name = name + "mec-time/mec-t"
-            name = name + str(test)
-            name= name + "-velocity.txt"
-            
+            name = name + "mec-time/mec-t" 
         else:
             # If it's a magnetic response
-            name = name + "mag-time/time x velocity.txt"
+            name = name + "mag-time/mag-t"
+        name = name + str(test)
+        name= name + "-velocity.txt"
     else:
         # If it's a frequency domain response
         name = main_dir + "Frequency response/"
