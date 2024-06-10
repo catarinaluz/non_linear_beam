@@ -255,7 +255,7 @@ def set_file_name(main_dir, acc=0, time=True, mec=True, test = 1):
             name = name + "mag-frf/"
 
         # Add the acceleration value to the directory name
-        name = name + f"{acc:.2f}" + "g/" + str(acc) + "g.txt"
+        name = name + f"{acc:.2f}" + "g/" + f"{acc:.2f}" + "g.txt"
 
     return name
 
