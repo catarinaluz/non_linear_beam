@@ -409,6 +409,6 @@ def optimization(w, gamma, freq_array, amp_array, acc, initial_guess):
     result = minimize(objective, 
                       initial_guess, 
                       args=(freq_array, amp_array, w, gamma, acc), 
-                      bounds=[(0, 10**3 * w**2), (0, 0.5)],
+                      bounds=[(0, None), (0, None)],
                       method = "Nelder-Mead")
     return result.x
