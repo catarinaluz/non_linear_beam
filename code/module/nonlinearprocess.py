@@ -331,7 +331,6 @@ def frequency_response_module(freq,w, k_nl, amplitude, gamma, fm, acc):
 
     A = A*amplitude**2
 
-    #TODO: verificar a questão da força modal
     B = (fm * acc)**2
 
     func = np.abs(A-B)
@@ -385,6 +384,6 @@ def optimization(w, gamma, freq_array, amp_array, acc, initial_guess):
     result = minimize(objective, 
                       initial_guess, 
                       args=(freq_array, amp_array, w, gamma, acc), 
-                      bounds=[(0, None), (0, None)],
+                      bounds=[(0, 10**3 * w**2), (0, 0.5)],
                       method = "Nelder-Mead")
     return result.x
