@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import scipy.signal as signal
-from scipy.optimize import curve_fit
+from scipy.optimize import minimize
 
 
 
@@ -308,7 +308,7 @@ def plot_fft(time, amplitude, freq_lim):
     
     return limit_freqs_mec, limit_fft_mec
 
-def frequency_response_module(freq,k_linear, k_nl, amplitude, gamma, fm, acc):
+def frequency_response_module(freq,w, k_nl, amplitude, gamma, fm, acc):
     """
     Calculate the frequency response module.
 
@@ -326,8 +326,8 @@ def frequency_response_module(freq,k_linear, k_nl, amplitude, gamma, fm, acc):
     -----------
     - func: array of frequency response values
     """
-    #TODO: verificar se é realmente gamma
-    A = ( freq**2 - k_linear - 3/4 *k_nl*amplitude**2 )**2 + (2*gamma*np.sqrt(k_linear)*freq)**2
+
+    A = ( freq**2 - w**2 - 3/4 *k_nl*amplitude**2 )**2 + (gamma*freq)**2
 
     A = A*amplitude**2
 
@@ -338,7 +338,33 @@ def frequency_response_module(freq,k_linear, k_nl, amplitude, gamma, fm, acc):
 
     return func
 
-def optimization(k_linear, gamma, freq_array, amp_array, acc, initial_guess):
+
+def objective(params, freq_array, amp_array, k_linear, gamma, acc):
+    """
+    Objective function to be minimized.
+
+    Parameters:
+    -----------
+    - params: array of parameters [k_nl, fm]
+    - freq_array: array of frequencies
+    - amp_array: array of amplitudes
+    - k_linear: linear stiffness
+    - gamma: damping coefficient
+    - acc: acceleration
+
+    Returns:
+    -----------
+    - error: sum of the squared errors of the frequency response
+    """
+    k_nl, fm = params
+    error = 0
+    for i, f in enumerate(freq_array):
+        amplitude = amp_array[i]
+        error += frequency_response_module(f, w, k_nl, amplitude, gamma, fm, acc)
+    return np.sum(error)
+
+
+def optimization(w, gamma, freq_array, amp_array, acc, initial_guess):
     """
     Optimize to identify knl and fm.
 
@@ -353,11 +379,7 @@ def optimization(k_linear, gamma, freq_array, amp_array, acc, initial_guess):
 
     Returns:
     -----------
-    - popt: optimized parameters (k_nl and fm)
+    - result.x: optimized parameters (k_nl and fm)
     """
-    def model_func(freq, k_nl, fm):
-        return frequency_response_module(freq, k_linear, k_nl, amp_array, gamma, fm, acc)
-
-    #TODO: verificar função curve_fit
-    popt, pcov = curve_fit(model_func, freq_array, np.zeros_like(freq_array), p0=initial_guess)
-    return popt
+    result = minimize(objective, initial_guess, args=(freq_array, amp_array, w, gamma, acc), bounds=[(0, None), (0, None)])
+    return result.x
