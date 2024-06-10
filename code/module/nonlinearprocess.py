@@ -410,5 +410,5 @@ def optimization(w, gamma, freq_array, amp_array, acc, initial_guess):
                       initial_guess, 
                       args=(freq_array, amp_array, w, gamma, acc), 
                       bounds=[(0, None), (1e-5, 1e-4)],
-                      method = "Nelder-Mead")
+                      method = None)
     return result.x
