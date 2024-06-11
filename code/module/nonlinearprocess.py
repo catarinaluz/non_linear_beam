@@ -381,32 +381,6 @@ def get_frf(frequency_array, beta, w, A, gamma):
     return np.array(frequencias), np.array(a_)
 
 
-def frequency_response_module(freq, w, k_nl, amplitude, gamma, fm, acc):
-    """
-    Calculate the frequency response module.
-
-    Parameters:
-    -----------
-    - freq: array of frequencies
-    - k_linear: linear stiffness
-    - k_nl: nonlinear stiffness
-    - amplitude: array of amplitudes
-    - gamma: damping coefficient
-    - fm: modal force
-    - acc: acceleration
-
-    Returns:
-    -----------
-    - func: array of frequency response values
-    """
-
-    A = (freq**2 - w**2 - 3/4 * k_nl * amplitude**2)**2 + (gamma * freq)**2
-    A = A * amplitude**2
-    B = (fm * acc)**2
-    func = np.abs(A - B)
-
-    return func
-
 def create_objective(freq_array, amp_array, gamma, acc):
     """
     Create the objective function with fixed hyperparameters.
@@ -423,14 +397,22 @@ def create_objective(freq_array, amp_array, gamma, acc):
     - objective: a function to be minimized
     """
     def objective(params):
-        k_nl, fm, w0 = params
+        beta, A, w = params
+        calculated_freqs, calculated_amps = get_frf(freq_array, beta, w, A, gamma)
         error = 0
-        for i, f in enumerate(freq_array):
-            amplitude = amp_array[i]
-            error += frequency_response_module(f, w0, k_nl, amplitude, gamma, fm, acc)
-        return np.sum(error)
+        for f, exp_amp in zip(freq_array, amp_array):
+            # Encontrar a amplitude calculada correspondente à frequência experimental
+            idx = np.where(calculated_freqs == f)[0]
+            if idx.size > 0:
+                calc_amp = calculated_amps[idx[0]]
+                error += (exp_amp - calc_amp) ** 2
+            else:
+                # Penalizar se não encontrar a frequência
+                error += exp_amp ** 2
+        return error
     
     return objective
+
 
 def perform_optimization(freq_array, amp_array, gamma, acc, boundaries,
                          alg_params={'max_num_iteration': 100,
