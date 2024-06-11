@@ -478,8 +478,7 @@ def perform_optimization(freq_array, amp_array, gamma, acc, boundaries,
     objective = create_objective(freq_array, amp_array, gamma, acc)
     
     ga_model = ga(function=objective, dimension=3, variable_type='real',
-                  variable_boundaries=boundaries, algorithm_parameters=alg_params,
-                  function_timeout=100000)
+                  variable_boundaries=boundaries, algorithm_parameters=alg_params)
     
     # Run the genetic algorithm
     ga_model.run(seed = 42)
