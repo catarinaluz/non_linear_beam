@@ -471,7 +471,7 @@ def perform_optimization(freq_array, amp_array, gamma, acc, boundaries,
     - freq_array: array of frequencies
     - amp_array: array of amplitudes
     - gamma: damping coefficient
-    - acc: acceleration
+    - acc: acceleration (% of g)
     - boundaries: boundaries for the parameters to be optimized
     - alg_params: algorithm parameters for the genetic algorithm
 
