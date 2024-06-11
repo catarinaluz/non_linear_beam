@@ -308,24 +308,69 @@ def plot_fft(time, amplitude, freq_lim):
     
     return limit_freqs_mec, limit_fft_mec
 
-def coef_eq(freq,beta,w,A,gamma):
-    c_6 = (3*beta/(8*w))**2
+def coef_eq(freq, beta, w, A, gamma):
+    """
+    Calculate the coefficients of the polynomial equation for the given parameters.
+
+    Parameters:
+    -----------
+    - freq: float
+        Frequency in radians per second.
+    - beta: float
+        Parameter related to the system's characteristics.
+    - w: float
+        Natural frequency of the system.
+    - A: float
+        Amplitude of the excitation.
+    - gamma: float
+        Damping coefficient.
+
+    Returns:
+    -----------
+    - coefficients: list of floats
+        List containing the coefficients [c_6, c_5, c_4, c_3, c_2, c_1, c_0] of the polynomial equation.
+    """
+    c_6 = (3 * beta / (8 * w)) ** 2
     c_5 = 0
     c_4 = (3 / 4) * beta * (1 - freq / w)
     c_3 = 0
-    c_2 = (freq-w)**2 +(gamma/2)**2
+    c_2 = (freq - w) ** 2 + (gamma / 2) ** 2
     c_1 = 0
-    c_0 = -(A/(2*w))**2
+    c_0 = -(A / (2 * w)) ** 2
 
-    return [c_6,c_5,c_4,c_3,c_2,c_1,c_0]
+    return [c_6, c_5, c_4, c_3, c_2, c_1, c_0]
 
-def get_frf(frequency_array, beta,w,A,gamma):
+
+def get_frf(frequency_array, beta, w, A, gamma):
+    """
+    Calculate the frequency response function for a given array of frequencies and system parameters.
+
+    Parameters:
+    -----------
+    - frequency_array: array-like
+        Array of frequencies for which the frequency response function is calculated.
+    - beta: float
+        Parameter related to the system's characteristics.
+    - w: float
+        Natural frequency of the system.
+    - A: float
+        Amplitude of the excitation.
+    - gamma: float
+        Damping coefficient.
+
+    Returns:
+    -----------
+    - frequencias: numpy array
+        Array of frequencies where the real positive roots are found.
+    - a_: numpy array
+        Array of corresponding real positive roots.
+    """
     a_ = []
     frequencias = []
 
-    for i,f in enumerate(frequency_array):
-        rad = 2*np.pi*f
-        c = coef_eq(rad,beta,w,A,gamma)
+    for i, f in enumerate(frequency_array):
+        rad = 2 * np.pi * f
+        c = coef_eq(rad, beta, w, A, gamma)
         roots = np.roots(c)
         for raiz in roots:
             if raiz.imag == 0 and raiz.real > 0:
@@ -333,6 +378,7 @@ def get_frf(frequency_array, beta,w,A,gamma):
                 frequencias.append(f)
 
     return np.array(frequencias), np.array(a_)
+
 
 def frequency_response_module(freq,w, k_nl, amplitude, gamma, fm, acc):
     """
@@ -410,6 +456,6 @@ def optimization(w, gamma, freq_array, amp_array, acc, initial_guess):
     result = minimize(objective, 
                       initial_guess, 
                       args=(freq_array, amp_array, w, gamma, acc), 
-                      bounds=[(1e11, 1e12), (1e-6, 1e-5)],
+                      bounds=[(1e11, 1e12), (0.5, 3)],
                       method = "BFGS")
     return result.x
