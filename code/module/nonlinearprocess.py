@@ -380,6 +380,44 @@ def get_frf(frequency_array, beta, w, A, gamma):
 
     return np.array(frequencias), np.array(a_)
 
+def get_frf_fit(frequency_array, beta, w, A, gamma):
+    """
+    Calculate the frequency response function for a given array of frequencies and system parameters.
+
+    Parameters:
+    -----------
+    - frequency_array: array-like
+        Array of frequencies for which the frequency response function is calculated.
+    - beta: float
+        Parameter related to the system's characteristics.
+    - w: float
+        Natural frequency of the system.
+    - A: float
+        Amplitude of the excitation.
+    - gamma: float
+        Damping coefficient.
+
+    Returns:
+    -----------
+    - frequencias: numpy array
+        Array of frequencies where the real positive roots are found.
+    - a_: numpy array
+        Array of corresponding real positive roots.
+    """
+    a_ = []
+    frequencias = []
+
+    for i, f in enumerate(frequency_array):
+        rad = 2 * np.pi * f
+        c = coef_eq(rad, beta, w, A, gamma)
+        roots = np.roots(c)
+        for raiz in roots:
+            if raiz.imag == 0 and raiz.real > 0:
+                a_.append(max(raiz.real))
+                frequencias.append(f)
+
+    return np.array(frequencias), np.array(a_)
+
 
 def create_objective(freq_array, amp_array, gamma, acc):
     """
@@ -398,17 +436,9 @@ def create_objective(freq_array, amp_array, gamma, acc):
     """
     def objective(params):
         beta, A, w = params
-        calculated_freqs, calculated_amps = get_frf(freq_array, beta, w, A, gamma)
-        error = 0
-        for f, exp_amp in zip(freq_array, amp_array):
-            # Encontrar a amplitude calculada correspondente à frequência experimental
-            idx = np.where(calculated_freqs == f)[0]
-            if idx.size > 0:
-                calc_amp = calculated_amps[idx[0]]
-                error += (exp_amp - calc_amp) ** 2
-            else:
-                # Penalizar se não encontrar a frequência
-                error += exp_amp ** 2
+        _, calculated_amps = get_frf_fit(freq_array, beta, w, A, gamma)        
+        error = np.sum((calculated_amps - amp_array)**2)
+
         return error
     
     return objective
