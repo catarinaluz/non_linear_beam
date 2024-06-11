@@ -3,7 +3,11 @@ import matplotlib.pyplot as plt
 
 import scipy.signal as signal
 from scipy.optimize import minimize
-from geneticalgorithm import geneticalgorithm as ga
+from geneticalgorithm2 import geneticalgorithm2 as ga
+
+from geneticalgorithm2 import Crossover, Mutations, Selection # classes for specific mutation and crossover behavior
+
+from geneticalgorithm2 import Population_initializer # for creating better start population
 
 
 
@@ -445,14 +449,16 @@ def create_objective(freq_array, amp_array, gamma, acc):
 
 
 def perform_optimization(freq_array, amp_array, gamma, acc, boundaries,
-                         alg_params={'max_num_iteration': 100,
-                                     'population_size': 1000,
-                                     'mutation_probability': 0.01,
-                                     'elit_ratio': 0.01,
-                                     'crossover_probability': 0.9,
-                                     'parents_portion': 0.3,
-                                     'crossover_type': 'uniform',
-                                     'max_iteration_without_improv': None}):
+                         alg_params={'max_num_iteration': None,
+                                       'population_size':100,
+                                       'mutation_probability':0.1,
+                                       'elit_ratio': 0.01,
+                                       'crossover_probability': 0.5,
+                                       'parents_portion': 0.3,
+                                       'crossover_type':'uniform',
+                                       'mutation_type': 'uniform_by_center',
+                                       'selection_type': 'roulette',
+                                       'max_iteration_without_improv':None}):
     """
     Perform optimization using a genetic algorithm.
 
@@ -476,6 +482,6 @@ def perform_optimization(freq_array, amp_array, gamma, acc, boundaries,
                   function_timeout=100000)
     
     # Run the genetic algorithm
-    ga_model.run()
+    ga_model.run(seed = 42)
 
     return ga_model
