@@ -415,8 +415,8 @@ def get_frf_fit(frequency_array, beta, w, A, gamma):
         rad = 2 * np.pi * f
         c = coef_eq(rad, beta, w, A, gamma)
         roots = np.roots(c)
+        valid_roots =[]
         for raiz in roots:
-            valid_roots =[]
             if raiz.imag == 0 and raiz.real > 0:
                 valid_roots.append(raiz.real)
             if len(valid_roots>0):
