@@ -419,7 +419,7 @@ def get_frf_fit(frequency_array, beta, w, A, gamma):
             valid_roots =[]
             if raiz.imag == 0 and raiz.real > 0:
                 valid_roots.append(raiz.real)
-            if len(vald_roots>0):
+            if len(valid_roots>0):
                 a_.append(max(valid_roots))
                 frequencias.append(f)
 
