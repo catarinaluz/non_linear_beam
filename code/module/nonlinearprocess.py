@@ -381,7 +381,7 @@ def get_frf(frequency_array, beta, w, A, gamma):
     return np.array(frequencias), np.array(a_)
 
 
-def frequency_response_module(freq,w, k_nl, amplitude, gamma, fm, acc):
+def frequency_response_module(freq, w, k_nl, amplitude, gamma, fm, acc):
     """
     Calculate the frequency response module.
 
@@ -400,54 +400,70 @@ def frequency_response_module(freq,w, k_nl, amplitude, gamma, fm, acc):
     - func: array of frequency response values
     """
 
-    A = ( freq**2 - w**2 - 3/4 *k_nl*amplitude**2 )**2 + (gamma*freq)**2
-
-    A = A*amplitude**2
-
+    A = (freq**2 - w**2 - 3/4 * k_nl * amplitude**2)**2 + (gamma * freq)**2
+    A = A * amplitude**2
     B = (fm * acc)**2
-
-    func = np.abs(A-B)
+    func = np.abs(A - B)
 
     return func
 
-
-def objective(params, freq_array, amp_array, gamma, acc):
+def create_objective(freq_array, amp_array, gamma, acc):
     """
-    Objective function to be minimized.
+    Create the objective function with fixed hyperparameters.
 
     Parameters:
     -----------
-    - params: array of parameters [k_nl, fm, w0]
     - freq_array: array of frequencies
     - amp_array: array of amplitudes
-    - k_linear: linear stiffness
     - gamma: damping coefficient
     - acc: acceleration
 
     Returns:
     -----------
-    - error: sum of the squared errors of the frequency response
+    - objective: a function to be minimized
     """
-    k_nl, fm, w0 = params
-    error = 0
-    for i, f in enumerate(freq_array):
-        amplitude = amp_array[i]
-        error += frequency_response_module(f, w0, k_nl, amplitude, gamma, fm, acc)
-    return np.sum(error)
-
-def perform_optimization(boundaries,
-                         alg_params = {'max_num_iteration': 100,\
-                                        'population_size':1000,\
-                                        'mutation_probability':0.01,\
-                                        'elit_ratio': 0.01,\
-                                        'crossover_probability': 0.9,\
-                                        'parents_portion': 0.3,\
-                                        'crossover_type':'uniform',\
-                                        'max_iteration_without_improv':None}):
+    def objective(params):
+        k_nl, fm, w0 = params
+        error = 0
+        for i, f in enumerate(freq_array):
+            amplitude = amp_array[i]
+            error += frequency_response_module(f, w0, k_nl, amplitude, gamma, fm, acc)
+        return np.sum(error)
     
-    ga_model=ga(function=objective, dimension=3,variable_type='real',variable_boundaries=boundaries, algorithm_parameters=alg_params,  function_timeout = 100000)
+    return objective
 
-# Run the genetic algorithm
+def perform_optimization(freq_array, amp_array, gamma, acc, boundaries,
+                         alg_params={'max_num_iteration': 100,
+                                     'population_size': 1000,
+                                     'mutation_probability': 0.01,
+                                     'elit_ratio': 0.01,
+                                     'crossover_probability': 0.9,
+                                     'parents_portion': 0.3,
+                                     'crossover_type': 'uniform',
+                                     'max_iteration_without_improv': None}):
+    """
+    Perform optimization using a genetic algorithm.
+
+    Parameters:
+    -----------
+    - freq_array: array of frequencies
+    - amp_array: array of amplitudes
+    - gamma: damping coefficient
+    - acc: acceleration
+    - boundaries: boundaries for the parameters to be optimized
+    - alg_params: algorithm parameters for the genetic algorithm
+
+    Returns:
+    -----------
+    - ga_model: the genetic algorithm model after running the optimization
+    """
+    objective = create_objective(freq_array, amp_array, gamma, acc)
+    
+    ga_model = ga(function=objective, dimension=3, variable_type='real',
+                  variable_boundaries=boundaries, algorithm_parameters=alg_params,
+                  function_timeout=100000)
+    
+    # Run the genetic algorithm
     ga_model.run()
 
-    return 0
+    return ga_model
