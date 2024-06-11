@@ -414,6 +414,8 @@ def get_frf_fit(frequency_array, beta, w, A, gamma):
         rad = 2 * np.pi * f
         c = coef_eq(rad, beta, w, A, gamma)  # Assuming coef_eq is defined elsewhere
         roots = np.roots(c)
+        if isinstance(roots, np.float64):  # Ensure roots is iterable
+            roots = [roots]
         for raiz in roots:
             if raiz.imag == 0 and raiz.real > 0:
                 if f not in a_dict:
