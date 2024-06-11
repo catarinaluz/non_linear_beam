@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 import scipy.signal as signal
 from scipy.optimize import minimize
+from geneticalgorithm import geneticalgorithm as ga
 
 
 
@@ -410,13 +411,13 @@ def frequency_response_module(freq,w, k_nl, amplitude, gamma, fm, acc):
     return func
 
 
-def objective(params, freq_array, amp_array, w, gamma, acc):
+def objective(params, freq_array, amp_array, gamma, acc):
     """
     Objective function to be minimized.
 
     Parameters:
     -----------
-    - params: array of parameters [k_nl, fm]
+    - params: array of parameters [k_nl, fm, w0]
     - freq_array: array of frequencies
     - amp_array: array of amplitudes
     - k_linear: linear stiffness
@@ -427,35 +428,26 @@ def objective(params, freq_array, amp_array, w, gamma, acc):
     -----------
     - error: sum of the squared errors of the frequency response
     """
-    k_nl, fm = params
+    k_nl, fm, w0 = params
     error = 0
     for i, f in enumerate(freq_array):
         amplitude = amp_array[i]
-        error += frequency_response_module(f, w, k_nl, amplitude, gamma, fm, acc)
+        error += frequency_response_module(f, w0, k_nl, amplitude, gamma, fm, acc)
     return np.sum(error)
 
+def perform_optimization(boundaries,
+                         alg_params = {'max_num_iteration': 100,\
+                                        'population_size':1000,\
+                                        'mutation_probability':0.01,\
+                                        'elit_ratio': 0.01,\
+                                        'crossover_probability': 0.9,\
+                                        'parents_portion': 0.3,\
+                                        'crossover_type':'uniform',\
+                                        'max_iteration_without_improv':None}):
+    
+    ga_model=ga(function=objective, dimension=3,variable_type='real',variable_boundaries=boundaries, algorithm_parameters=alg_params,  function_timeout = 100000)
 
-def optimization(w, gamma, freq_array, amp_array, acc, initial_guess):
-    """
-    Optimize to identify knl and fm.
+# Run the genetic algorithm
+    ga_model.run()
 
-    Parameters:
-    -----------
-    - k_linear: linear stiffness
-    - gamma: damping coefficient
-    - freq_array: array of frequencies
-    - amp_array: array of amplitudes
-    - acc: acceleration
-    - initial_guess: initial guess for k_nl and fm
-
-    Returns:
-    -----------
-    - result.x: optimized parameters (k_nl and fm)
-    """
-    # TODO: colocar bounds como parte da função
-    result = minimize(objective, 
-                      initial_guess, 
-                      args=(freq_array, amp_array, w, gamma, acc), 
-                      bounds=[(1e11, 1e12), (0.5, 3)],
-                      method = "BFGS")
-    return result.x
+    return 0
