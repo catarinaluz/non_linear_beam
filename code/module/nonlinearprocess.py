@@ -410,7 +410,7 @@ def get_frf_fit(frequency_array, beta, w, A, gamma):
     """
     a_dict = {}
 
-    for i, f in enumerate(frequency_array):
+    for f in frequency_array:
         rad = 2 * np.pi * f
         c = coef_eq(rad, beta, w, A, gamma)  # Assuming coef_eq is defined elsewhere
         roots = np.roots(c)
