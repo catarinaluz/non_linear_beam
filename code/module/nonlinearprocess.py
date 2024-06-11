@@ -408,23 +408,20 @@ def get_frf_fit(frequency_array, beta, w, A, gamma):
     - a_: numpy array
         Array of corresponding real positive roots.
     """
-    a_dict = {}
+    a_ = []
+    frequencias = []
 
-    for f in frequency_array:
+    for i, f in enumerate(frequency_array):
         rad = 2 * np.pi * f
-        c = coef_eq(rad, beta, w, A, gamma)  # Assuming coef_eq is defined elsewhere
+        c = coef_eq(rad, beta, w, A, gamma)
         roots = np.roots(c)
-        if isinstance(roots, np.float64):  # Ensure roots is iterable
-            roots = [roots]
         for raiz in roots:
+            valid_roots =[]
             if raiz.imag == 0 and raiz.real > 0:
-                if f not in a_dict:
-                    a_dict[f] = raiz.real
-                else:
-                    a_dict[f] = max(a_dict[f], raiz.real)
-
-    frequencias = list(a_dict.keys())
-    a_ = list(a_dict.values())
+                valid_roots.append(raiz.real)
+            if len(vald_roots>0):
+                a_.append(max(valid_roots))
+                frequencias.append(f)
 
     return np.array(frequencias), np.array(a_)
 
