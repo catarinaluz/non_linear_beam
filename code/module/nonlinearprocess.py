@@ -442,7 +442,8 @@ def create_objective(freq_array, amp_array, gamma, acc):
     - objective: a function to be minimized
     """
     def objective(params):
-        beta, A, w = params
+        beta, fm, w = params
+        A = fm * acc * 9.81
         _, calculated_amps = get_frf_fit(freq_array, beta, w, A, gamma)        
         error = np.sum((calculated_amps - amp_array)**2)
 
