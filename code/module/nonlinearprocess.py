@@ -419,14 +419,14 @@ def get_frf_fit(frequency_array, beta, w, A, gamma):
         for raiz in roots:
             if raiz.imag == 0 and raiz.real > 0:
                 valid_roots.append(raiz.real)
-        if len(valid_roots)>0:
+        if len(valid_roots) > 0:
             a_.append(max(valid_roots))
             frequencias.append(f)
 
     return np.array(frequencias), np.array(a_)
 
 
-def create_objective(freq_array, amp_array, gamma, acc):
+def create_objective(freq_array, amp_array, acc):
     """
     Create the objective function with fixed hyperparameters.
 
@@ -434,7 +434,6 @@ def create_objective(freq_array, amp_array, gamma, acc):
     -----------
     - freq_array: array of frequencies
     - amp_array: array of amplitudes
-    - gamma: damping coefficient
     - acc: acceleration
 
     Returns:
@@ -442,27 +441,27 @@ def create_objective(freq_array, amp_array, gamma, acc):
     - objective: a function to be minimized
     """
     def objective(params):
-        beta, fm, w = params
+        beta, fm, w, gamma = params
         A = fm * acc * 9.81
-        _, calculated_amps = get_frf_fit(freq_array, beta, w, A, gamma)        
+        _, calculated_amps = get_frf_fit(freq_array, beta, w, A, gamma)
         error = np.sum((calculated_amps - amp_array)**2)
 
         return error
-    
+
     return objective
 
 
-def perform_optimization(freq_array, amp_array, gamma, acc, boundaries,
+def perform_optimization(freq_array, amp_array, acc, boundaries,
                          alg_params={'max_num_iteration': None,
-                                       'population_size':100,
-                                       'mutation_probability':0.1,
-                                       'elit_ratio': 0.01,
-                                       'crossover_probability': 0.5,
-                                       'parents_portion': 0.3,
-                                       'crossover_type':'uniform',
-                                       'mutation_type': 'uniform_by_center',
-                                       'selection_type': 'roulette',
-                                       'max_iteration_without_improv':None}):
+                                     'population_size': 100,
+                                     'mutation_probability': 0.1,
+                                     'elit_ratio': 0.01,
+                                     'crossover_probability': 0.5,
+                                     'parents_portion': 0.3,
+                                     'crossover_type': 'uniform',
+                                     'mutation_type': 'uniform_by_center',
+                                     'selection_type': 'roulette',
+                                     'max_iteration_without_improv': None}):
     """
     Perform optimization using a genetic algorithm.
 
@@ -470,7 +469,6 @@ def perform_optimization(freq_array, amp_array, gamma, acc, boundaries,
     -----------
     - freq_array: array of frequencies
     - amp_array: array of amplitudes
-    - gamma: damping coefficient
     - acc: acceleration (% of g)
     - boundaries: boundaries for the parameters to be optimized
     - alg_params: algorithm parameters for the genetic algorithm
@@ -479,12 +477,12 @@ def perform_optimization(freq_array, amp_array, gamma, acc, boundaries,
     -----------
     - ga_model: the genetic algorithm model after running the optimization
     """
-    objective = create_objective(freq_array, amp_array, gamma, acc)
-    
-    ga_model = ga(function=objective, dimension=3, variable_type='real',
+    objective = create_objective(freq_array, amp_array, acc)
+
+    ga_model = ga(function=objective, dimension=4, variable_type='real',
                   variable_boundaries=boundaries, algorithm_parameters=alg_params)
-    
+
     # Run the genetic algorithm
-    ga_model.run(seed = 42)
+    ga_model.run(seed=42)
 
     return ga_model
