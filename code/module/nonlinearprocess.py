@@ -315,7 +315,7 @@ def coef_eq(freq,beta,w,A,gamma):
     c_3 = 0
     c_2 = (freq-w)**2 +(gamma/2)**2
     c_1 = 0
-    c_0 = -(freq**2*A/(2*w))**2
+    c_0 = -(A/(2*w))**2
 
     return [c_6,c_5,c_4,c_3,c_2,c_1,c_0]
 
