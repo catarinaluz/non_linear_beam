@@ -8,6 +8,26 @@ This repository contains the code necessary for extracting, visualizing, and ana
 - **Module**: Tools for extracting the data, visualizing then and extracting the non-linear oscilator parameters.
 - **Examples**: Notebook examples on how to use the module.
 
+## Directory Structure
+
+- **code**: Contains the primary codebase.
+  - **examples**: Jupyter notebooks demonstrating the usage of the module.
+  - **module**: Includes the core module for data extraction and analysis.
+    - `__init__.py`
+    - `nonlinearprocess.py`
+  - `requirements.txt`: Lists the dependencies required to run the code.
+
+- **Experimental Data**: Holds the experimental data used for analysis.
+  - **Frequency response**:
+    - **mag-frf**: Frequency response data for different excitation levels.
+      - `0.04g`, `0.06g`, `0.08g`, `0.10g`, `0.12g`
+    - **mec-frf**: Mechanical frequency response data for different excitation levels.
+      - `0.04g`, `0.06g`, `0.08g`, `0.10g`, `0.12g`, `0.14g`
+
+  - **Time response**:
+    - **mag-time**: Time response data from 3 impact tests for the case with magnetic force.
+    - **mec-time**: Time response data from 3 impact tests for the case without magnetic force
+      
 ## Model
 
 Beam + Magnetic Interaction
@@ -94,13 +114,13 @@ For using experimental data provided:
 
 2. Run the data extraction functions available to load and preprocess the experimental data.
 
-3. Utilize the visualization tools in the to plot and inspect the experimental data to gain insights and identify patterns.
+3. Utilize the visualization tools to plot and inspect the experimental data to gain insights and identify patterns.
 
 4. Apply the parameter estimation scripts in to fit the model to the experimental data and estimate the system parameters.
 
 For using your own dataset:
 
-1. Prepare your dataset in a compatible format (e.g., CSV, Excel).
+1. Prepare your dataset in a compatible format.
 
 2. Ensure the data meets the requirements of the data extraction scripts.
 
