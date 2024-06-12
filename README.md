@@ -39,7 +39,9 @@ $$
 For a given $p_0$:
 
 $$
+
 C\dot{\left(\frac{w_n}{\psi_n}\right)} \bigg|_{x=p_0} + f_m \ddot{B} \bigg|_{x=p_0} + (k_{l_{mec}} + k_{l_{mag}}) \frac{w_n}{\psi_n} \bigg|_{x=p_0} + (k_{nl_{mec}} + k_{nl_{mag}}) \left(\frac{w_n}{\psi_n}\right)^3 \bigg|_{x=p_0} + m \ddot{\left(\frac{w_n}{\psi_n}\right)} \bigg|_{x=p_0} = 0
+
 $$
 
 Therefore, the equation to be fitted:
