@@ -33,7 +33,7 @@ $$
 We have:
 
 $$
-C\dot{\left(\frac{w_n}{\psi_n}\right)} + f_m \ddot{B} + (k_{l_{mec}} + k_{l_{mag}}) \frac{w_n}{\psi_n} + (k_{nl_{mec}} + k_{nl_{mag}}) \left(\frac{w_n}{\psi_n}\right)^3 + m \ddot{\left(\frac{w_n}{\psi_n}\right)} = 0
+C\dot{\left(\frac{w_n}{\psi_n}\right)} + f_m \ddot{B} + (k_{l_{mec}} + k_{l_{mag}}) \frac{w_n}{\psi_n} + (k_{nl_{mec}}+ k_{nl_{mag}}) \left(\frac{w_n}{\psi_n}\right)^3 + m \ddot{\left(\frac{w_n}{\psi_n}\right)} = 0
 $$
 
 For a given $p_0$:
