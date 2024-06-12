@@ -88,4 +88,26 @@ pip install requirements.txt
 ```
 
 
+## Using Experimental Data
 
+Now, you have the option to use either the experimental data provided or your own dataset. You can extract and visualize the data, as well as fit the curve parameters using the provided tools. Refer to the examples for detailed usage instructions.
+
+For using experimental data provided:
+
+1. Ensure you have cloned the repository and installed the necessary dependencies as outlined in the "Getting Started" section of the README.
+
+2. Run the data extraction functions available to load and preprocess the experimental data.
+
+3. Utilize the visualization tools in the to plot and inspect the experimental data to gain insights and identify patterns.
+
+4. Apply the parameter estimation scripts in to fit the model to the experimental data and estimate the system parameters.
+
+For using your own dataset:
+
+1. Prepare your dataset in a compatible format (e.g., CSV, Excel).
+
+2. Ensure the data meets the requirements of the data extraction scripts.
+
+3. Follow the same steps outlined above for extracting, visualizing, and fitting the curve parameters using your own dataset.
+
+Refer to the examples provided in the repository for more information on how to use each tool effectively.
