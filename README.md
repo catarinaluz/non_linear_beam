@@ -39,7 +39,7 @@ $$
 After some mathematical manipulations, for a given point $p_0$, the equation to be fitted from experimental data is:
 
 $$
-\ddot{ w}_{n,p_0}(t) + C \dot{w}_{n,p_0}(t) + \left( \omega_0^2 + k_{l_{mag}} \right) w_{n,p_0}(t) + \left( k_{nl_{mag}}^{p_0} + k_{nl_{mec}}^{p_0} \right) w_{n,p_0}^3(t) = A_{acc} f_m^{p_0} \cos (\Omega t)
+\frac{d^2}{dt^2} w_{n,p_0}(t) + C \frac{d}{dt} w_{n,p_0}(t) + \left( \omega_0^2 + k_{l_{mag}} \right) w_{n,p_0}(t) + \left( k_{nl_{mag}}^{p_0} + k_{nl_{mec}}^{p_0} \right) w_{n,p_0}^3(t) = A_{acc} f_m^{p_0} \cos (\Omega t)
 $$
 
 Where:
