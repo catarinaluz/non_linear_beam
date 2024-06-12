@@ -1,6 +1,6 @@
 # Non-Linear-Beam
 
-This repository contains the code necessary for extracting, visualizing, and analyzing experimental data to determine the parameters of a non-linear oscillator system. The non-linear oscillator in question is subject to both mechanical and magnetic forces, with the overall goal of fitting the experimental data to the derived model and extracting relevant physical parameters.
+This repository contains the code necessary for extracting, visualizing, and analyzing experimental data to determine the parameters of a non-linear oscillator system. The non-linear oscillator in question is subject to magnetic forces, with the overall goal of fitting the experimental data to the derived model and extracting relevant physical parameters.
 
 ## Contents
 
@@ -33,47 +33,13 @@ This repository contains the code necessary for extracting, visualizing, and ana
 Beam + Magnetic Interaction
 
 $$
-C\dot{\eta_n} + f_m \ddot{B} + (k_{l_{mec}} + k_{l_{mag}})\eta_n + (k_{nl_{mec}} + k_{nl_{mag}})\eta_n^3 + m\ddot{\eta_n} = 0
+ m\ddot{\eta_n} + C\dot{\eta_n} + (k_{l_{mec}} + k_{l_{mag}})\eta_n + (k_{nl_{mec}} + k_{nl_{mag}})\eta_n^3  = - f_m \ddot{B} 
 $$
 
-Where:
+After some mathematical manipulations, for a given point $p_0$, the equation to be fitted from experimental data is:
 
 $$
-m = 1
-$$
-
-$$
-k_{l_{mec}} = \omega_0^2
-$$
-
-Note: In the absence of magnetic forces, we can associate $\zeta$ with $C$
-
-$$
-C = 2 \zeta \omega_0
-$$
-
-Taking:
-
-$$
-w_n = \eta_n \psi_n
-$$
-
-We have:
-
-$$
-C\dot{\left(\frac{w_n}{\psi_n}\right)} + f_m \ddot{B} + (k_{l_{mec}} + k_{l_{mag}}) \frac{w_n}{\psi_n} + (k_{nl_{mec}}+ k_{nl_{mag}}) \left(\frac{w_n}{\psi_n}\right)^3 + m \ddot{\left(\frac{w_n}{\psi_n}\right)} = 0
-$$
-
-For a given $p_0$:
-
-$$
-C\dot{\left(\frac{w_n}{\psi_n}\right)} \bigg|_{x=p_0} + f_m \ddot{B} \bigg|_{x=p_0} + (k_{l_{mec}} + k_{l_{mag}}) \frac{w_n}{\psi_n} \bigg|_{x=p_0} + (k_{nl_{mec}} + k_{nl_{mag}}) \left(\frac{w_n}{\psi_n}\right)^3 \bigg|_{x=p_0} + m \ddot{\left(\frac{w_n}{\psi_n}\right)} \bigg|_{x=p_0} = 0
-$$
-
-Therefore, the equation to be fitted:
-
-$$
-C\dot{\eta_n} + f_m \ddot{B} + (k_{l_{mec}} + k_{l_{mag}})\eta_n + (k_{nl_{mec}} + k_{nl_{mag}})\eta_n^3 + m\ddot{\eta_n} = A_{acc}\cos(\Omega t)
+A_{acc} f_m^{p_0} \cos (\Omega t) + C \frac{d}{dt} w_{n,p_0}(t) + \left( \omega_0^2 + k_{l_{mag}} \right) w_{n,p_0}(t) + \left( k_{nl_{mag}}^{p_0} + k_{nl_{mec}}^{p_0} \right) w_{n,p_0}^3(t) + \frac{d^2}{dt^2} w_{n,p_0}(t)
 $$
 
 Where:
@@ -84,6 +50,7 @@ Where:
 - $\Omega$ is the excitation frequency.
 - $A_{acc}$ is the acceleration amplitude.
 
+Therefore, the main goal is to identify the values of $f_m$, $\omega _n$, $C$ and $k_{nl}$ from experimental data.
 
 ## Getting Started
 
