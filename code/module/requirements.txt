@@ -1,5 +1,5 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import scipy.signal as signal
-from scipy.optimize import minimize
-from geneticalgorithm2 import geneticalgorithm2 as ga
+numpy
+matplotlib
+scipy
+geneticalgorithm2
+zipfile
