@@ -1,4 +1,12 @@
-# non-linear-beam
+# Non-Linear-Beam
+
+This repository contains the code necessary for extracting, visualizing, and analyzing experimental data to determine the parameters of a non-linear oscillator system. The non-linear oscillator in question is subject to both mechanical and magnetic forces, with the overall goal of fitting the experimental data to the derived model and extracting relevant physical parameters.
+
+## Contents
+
+- **Experimental Data**: Experimental data for the frequency response in several excitations and for the time response provinient of an impact test.
+- **Module**: Tools for extracting the data, visualizing then and extracting the non-linear oscilator parameters.
+- **Examples**: Notebook examples on how to use the module.
 
 ## Model
 
@@ -56,8 +64,28 @@ Where:
 - $C$ is the damping coefficient.
 - $k_{l_{mec}}$ and $k_{l_{mag}}$ are the linear elastic constants for mechanical and magnetic forces, respectively.
 - $k_{nl_{mec}}$ and $k_{nl_{mag}}$ are the nonlinear elastic constants for mechanical and magnetic forces, respectively.
-- $f_m$ is the magnetic force.
+- $f_m$ is the modal force.
 - $\Omega$ is the excitation frequency.
 - $A_{acc}$ is the acceleration amplitude.
+
+
+## Getting Started
+
+1. **Clone the Repository**: 
+```
+git clone https://github.com/catarinaluz/non_linear_beam.git
+```
+
+2. **Import the functions**:
+```
+from non_linear_beam.code.module.nonlinearprocess import get_frequency_data, get_time_data, lowpass_filter, get_parameters, set_file_name, plot_fft, bandpass_filter, get_frf,perform_optimization
+```
+
+3. **Install Dependencies**:
+Make sure you have Python and necessary libraries installed. You can install the required libraries using:
+```
+pip install requirements.txt
+```
+
 
 
