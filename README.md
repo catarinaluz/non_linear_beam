@@ -39,18 +39,20 @@ $$
 After some mathematical manipulations, for a given point $p_0$, the equation to be fitted from experimental data is:
 
 $$
-A_{acc} f_m^{p_0} \cos (\Omega t) + C \frac{d}{dt} w_{n,p_0}(t) + \left( \omega_0^2 + k_{l_{mag}} \right) w_{n,p_0}(t) + \left( k_{nl_{mag}}^{p_0} + k_{nl_{mec}}^{p_0} \right) w_{n,p_0}^3(t) + \frac{d^2}{dt^2} w_{n,p_0}(t)
+\frac{d^2}{dt^2} w_{n,p_0}(t) + C \frac{d}{dt} w_{n,p_0}(t) + \left( \omega_0^2 + k_{l_{mag}} \right) w_{n,p_0}(t) + \left( k_{nl_{mag}}^{p_0} + k_{nl_{mec}}^{p_0} \right) w_{n,p_0}^3(t) = A_{acc} f_m^{p_0} \cos (\Omega t)
 $$
 
 Where:
+- $w_{n,p_0}(t)$ is the vertical displacement.
 - $C$ is the damping coefficient.
 - $k_{l_{mec}}$ and $k_{l_{mag}}$ are the linear elastic constants for mechanical and magnetic forces, respectively.
 - $k_{nl_{mec}}$ and $k_{nl_{mag}}$ are the nonlinear elastic constants for mechanical and magnetic forces, respectively.
 - $f_m$ is the modal force.
 - $\Omega$ is the excitation frequency.
 - $A_{acc}$ is the acceleration amplitude.
+- $\omega_n$ is the natural frequency.
 
-Therefore, the main goal is to identify the values of $f_m$, $\omega _n$, $C$ and $k_{nl}$ from experimental data.
+Therefore, the main goal is to identify the values of $f_m$, $\omega_n $, $ C $ and $k_{nl}$ from experimental data.
 
 ## Getting Started
 
