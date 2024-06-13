@@ -69,7 +69,7 @@ from non_linear_beam.code.module.nonlinearprocess import get_frequency_data, get
 3. **Install Dependencies**:
 Make sure you have Python and necessary libraries installed. You can install the required libraries using:
 ```
-cd code
+cd code/module
 pip install requirements.txt
 ```
 
