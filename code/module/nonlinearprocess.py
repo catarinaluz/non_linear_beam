@@ -550,7 +550,7 @@ def create_objective_mult(freq_arrays, amp_arrays, acc_array):
         total_error = 0
 
         for freq_array, amp_array, acc in zip(freq_arrays, amp_arrays, acc_array):
-            A = fm * acc * 9.81
+            A = fm * acc
             _, calculated_amps = get_frf_fit_mult(freq_array, beta, w, A, gamma)
             error = np.sum((calculated_amps - amp_array)**2)
             total_error += error
