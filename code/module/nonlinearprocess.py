@@ -490,42 +490,17 @@ def perform_optimization(freq_array, amp_array, acc, boundaries,
 
 ### Add multi amplitudes
 
+
 def get_frf_fit_mult(frequency_array, beta, w, A, gamma):
-    """
-    Calculate the frequency response function for a given array of frequencies and system parameters.
-
-    Parameters:
-    -----------
-    - frequency_array: array-like
-        Array of frequencies for which the frequency response function is calculated.
-    - beta: float
-        Parameter related to the system's characteristics.
-    - w: float
-        Natural frequency of the system.
-    - A: float
-        Amplitude of the excitation.
-    - gamma: float
-        Damping coefficient.
-
-    Returns:
-    -----------
-    - frequencias: numpy array
-        Array of frequencies where the real positive roots are found.
-    - a_: numpy array
-        Array of corresponding real positive roots.
-    """
     a_ = []
     frequencias = []
 
-    for i, f in enumerate(frequency_array):
+    for f in frequency_array:
         rad = 2 * np.pi * f
         c = coef_eq(rad, beta, w, A, gamma)
         roots = np.roots(c)
-        valid_roots =[]
-        for raiz in roots:
-            if raiz.imag == 0 and raiz.real > 0:
-                valid_roots.append(raiz.real)
-        if len(valid_roots) > 0:
+        valid_roots = [raiz.real for raiz in roots if raiz.imag == 0 and raiz.real > 0]
+        if valid_roots:
             a_.append(max(valid_roots))
             frequencias.append(f)
 
@@ -551,32 +526,10 @@ def create_objective_mult(freq_arrays, amp_arrays, acc_array):
             total_error += error
 
         return total_error
-def perform_optimization_mult(freq_arrays, amp_arrays, acc_array, boundaries,
-                         alg_params={'max_num_iteration': None,
-                                     'population_size': 100,
-                                     'mutation_probability': 0.1,
-                                     'elit_ratio': 0.01,
-                                     'crossover_probability': 0.5,
-                                     'parents_portion': 0.3,
-                                     'crossover_type': 'uniform',
-                                     'mutation_type': 'uniform_by_center',
-                                     'selection_type': 'roulette',
-                                     'max_iteration_without_improv': None}):
-    """
-    Perform optimization using a genetic algorithm.
 
-    Parameters:
-    -----------
-    - freq_arrays: list of arrays of frequencies
-    - amp_arrays: list of arrays of amplitudes
-    - acc_array: array of accelerations (% of g)
-    - boundaries: boundaries for the parameters to be optimized
-    - alg_params: algorithm parameters for the genetic algorithm
+    return objective
 
-    Returns:
-    -----------
-    - ga_model: the genetic algorithm model after running the optimization
-    """
+def perform_optimization_mult(freq_arrays, amp_arrays, acc_array, boundaries, alg_params):
     objective = create_objective_mult(freq_arrays, amp_arrays, acc_array)
 
     ga_model = ga(function=objective, dimension=4, variable_type='real',
