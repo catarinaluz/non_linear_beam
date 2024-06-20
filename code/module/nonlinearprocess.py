@@ -490,7 +490,6 @@ def perform_optimization(freq_array, amp_array, acc, boundaries,
 
 ### Add multi amplitudes
 
-
 def get_frf_fit_mult(frequency_array, beta, w, A, gamma):
     a_ = []
     frequencias = []
@@ -506,17 +505,21 @@ def get_frf_fit_mult(frequency_array, beta, w, A, gamma):
 
     return np.array(frequencias), np.array(a_)
 
-def create_objective_mult(freq_arrays, amp_arrays, acc_array):
+def find_resonance_frequencies(freq_arrays, amp_arrays):
+    resonance_freqs = []
+    for freq_array, amp_array in zip(freq_arrays, amp_arrays):
+        resonance_freq = freq_array[np.argmax(amp_array)]
+        resonance_freqs.append(resonance_freq)
+    return np.array(resonance_freqs)
+
+def create_objective_mult(freq_arrays, amp_arrays, acc_array, resonance_freqs):
     def objective(params):
         beta, fm, w, gamma = params
         total_error = 0
 
-        for freq_array, amp_array, acc in zip(freq_arrays, amp_arrays, acc_array):
+        for freq_array, amp_array, acc, resonance_freq in zip(freq_arrays, amp_arrays, acc_array, resonance_freqs):
             A = fm * acc
             _, calculated_amps = get_frf_fit_mult(freq_array, beta, w, A, gamma)
-            
-            # Frequência de ressonância estimada
-            resonance_freq = w / (2 * np.pi)
             
             # Calcule o fator de ponderação
             weight = np.exp(-((freq_array - resonance_freq) ** 2) / (2 * (0.1 * resonance_freq) ** 2))
@@ -530,7 +533,8 @@ def create_objective_mult(freq_arrays, amp_arrays, acc_array):
     return objective
 
 def perform_optimization_mult(freq_arrays, amp_arrays, acc_array, boundaries, alg_params):
-    objective = create_objective_mult(freq_arrays, amp_arrays, acc_array)
+    resonance_freqs = find_resonance_frequencies(freq_arrays, amp_arrays)
+    objective = create_objective_mult(freq_arrays, amp_arrays, acc_array, resonance_freqs)
 
     ga_model = ga(function=objective, dimension=4, variable_type='real',
                   variable_boundaries=boundaries, algorithm_parameters=alg_params)
