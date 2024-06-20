@@ -532,19 +532,6 @@ def get_frf_fit_mult(frequency_array, beta, w, A, gamma):
     return np.array(frequencias), np.array(a_)
 
 def create_objective_mult(freq_arrays, amp_arrays, acc_array):
-    """
-    Create the objective function with fixed hyperparameters.
-
-    Parameters:
-    -----------
-    - freq_arrays: list of arrays of frequencies
-    - amp_arrays: list of arrays of amplitudes
-    - acc_array: array of accelerations
-
-    Returns:
-    -----------
-    - objective: a function to be minimized
-    """
     def objective(params):
         beta, fm, w, gamma = params
         total_error = 0
@@ -552,13 +539,18 @@ def create_objective_mult(freq_arrays, amp_arrays, acc_array):
         for freq_array, amp_array, acc in zip(freq_arrays, amp_arrays, acc_array):
             A = fm * acc
             _, calculated_amps = get_frf_fit_mult(freq_array, beta, w, A, gamma)
-            error = np.sum((calculated_amps - amp_array)**2)
+            
+            # Frequência de ressonância estimada
+            resonance_freq = w / (2 * np.pi)
+            
+            # Calcule o fator de ponderação
+            weight = np.exp(-((freq_array - resonance_freq) ** 2) / (2 * (0.1 * resonance_freq) ** 2))
+            
+            # Calcule o erro ponderado
+            error = np.sum(weight * (calculated_amps - amp_array) ** 2)
             total_error += error
 
         return total_error
-
-    return objective
-
 def perform_optimization_mult(freq_arrays, amp_arrays, acc_array, boundaries,
                          alg_params={'max_num_iteration': None,
                                      'population_size': 100,
