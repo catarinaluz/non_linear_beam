@@ -240,10 +240,10 @@ def set_file_name(main_dir, acc=0, time=True, mec=True, test = 1):
     """
     if time:
         # If it's a time domain response
-        name = main_dir + "Time response/"
+        name = main_dir 
         if mec:
             # If it's a mechanical response
-            name = name + "mec-time/mec-t" 
+            name = name + "mec-t" 
         else:
             # If it's a magnetic response
             name = name + "mag-time/mag-t"
